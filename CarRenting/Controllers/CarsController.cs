@@ -20,6 +20,64 @@ namespace CarRenting.Controllers
             Categories = GetCarCategories()
         });
 
+        public IActionResult All(
+            string brand,
+            string searchTerm,
+            CarSorting sorting)
+        {
+            var carsQuery = this.data.Cars.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(brand))
+            {
+                carsQuery = carsQuery.Where(c => c.Brand == brand);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                carsQuery = carsQuery.Where(c =>
+                    c.Brand.ToLower().Contains(searchTerm.ToLower()) ||
+                    c.Model.ToLower().Contains(searchTerm.ToLower()) ||
+                    c.Description.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            carsQuery = sorting switch
+            {
+                CarSorting.DateCreated => carsQuery.OrderByDescending(c => c.Id),
+                CarSorting.Year => carsQuery.OrderByDescending(c => c.Year),
+                CarSorting.BrandAndModel => carsQuery.OrderBy(c => c.Brand).ThenBy(c => c.Model),
+                _ => carsQuery.OrderByDescending(c => c.Id)
+            };
+
+            var cars = carsQuery
+                .Select(c => new CarListingViewModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    Year = c.Year,
+                    ImageUrl = c.ImageUrl,
+                    Category = c.Category.Name
+                })
+                .ToList();
+
+            var carBrands = data
+                .Cars
+                .Select(c => c.Brand)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+
+            return View(new AllCarsQueryModel
+            {
+                Brand = brand,
+                Brands = carBrands,
+                Cars = cars,
+                SearchTerm = searchTerm,
+                Sorting = sorting
+            });
+        }
+
         [HttpPost]
         public IActionResult Add(AddCarFormModel car)
         {
@@ -48,7 +106,7 @@ namespace CarRenting.Controllers
             data.Cars.Add(newCar);
             data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         private IEnumerable<CarCategoryViewModel> GetCarCategories()
