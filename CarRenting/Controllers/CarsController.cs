@@ -15,32 +15,24 @@ namespace CarRenting.Controllers
             this.data = data;
         }
 
-        public IActionResult Add() => View(new AddCarFormModel
-        {
-            Categories = GetCarCategories()
-        });
-
-        public IActionResult All(
-            string brand,
-            string searchTerm,
-            CarSorting sorting)
+        public IActionResult All([FromQuery]AllCarsQueryModel query)
         {
             var carsQuery = this.data.Cars.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(brand))
+            if (!string.IsNullOrWhiteSpace(query.Brand))
             {
-                carsQuery = carsQuery.Where(c => c.Brand == brand);
+                carsQuery = carsQuery.Where(c => c.Brand == query.Brand);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
                 carsQuery = carsQuery.Where(c =>
-                    c.Brand.ToLower().Contains(searchTerm.ToLower()) ||
-                    c.Model.ToLower().Contains(searchTerm.ToLower()) ||
-                    c.Description.ToLower().Contains(searchTerm.ToLower()));
+                    c.Brand.ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    c.Model.ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    c.Description.ToLower().Contains(query.SearchTerm.ToLower()));
             }
 
-            carsQuery = sorting switch
+            carsQuery = query.Sorting switch
             {
                 CarSorting.DateCreated => carsQuery.OrderByDescending(c => c.Id),
                 CarSorting.Year => carsQuery.OrderByDescending(c => c.Year),
@@ -48,7 +40,11 @@ namespace CarRenting.Controllers
                 _ => carsQuery.OrderByDescending(c => c.Id)
             };
 
+            var totalCars = carsQuery.Count();
+
             var cars = carsQuery
+                .Skip((query.CurrentPage - 1) * AllCarsQueryModel.CarsPerPage)
+                .Take(AllCarsQueryModel.CarsPerPage)
                 .Select(c => new CarListingViewModel
                 {
                     Id = c.Id,
@@ -67,16 +63,17 @@ namespace CarRenting.Controllers
                 .OrderBy(c => c)
                 .ToList();
 
+            query.TotalCars = totalCars;
+            query.Brands = carBrands;
+            query.Cars = cars;
 
-            return View(new AllCarsQueryModel
-            {
-                Brand = brand,
-                Brands = carBrands,
-                Cars = cars,
-                SearchTerm = searchTerm,
-                Sorting = sorting
-            });
+            return View(query);
         }
+
+        public IActionResult Add() => View(new AddCarFormModel
+        {
+            Categories = GetCarCategories()
+        });
 
         [HttpPost]
         public IActionResult Add(AddCarFormModel car)
