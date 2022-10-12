@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
-using static CarRenting.Data.DataConstants;
+using static CarRenting.Data.DataConstants.Car;
 
 namespace CarRenting.Models.Cars
 {
