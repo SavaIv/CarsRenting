@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using static CarRenting.Infrastructure.ClaimsPrincipalExtensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Claims;
+using CarRenting.Models;
 
 namespace CarRenting.Controllers
 {
