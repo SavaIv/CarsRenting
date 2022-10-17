@@ -1,6 +1,6 @@
-﻿namespace CarRenting.Models.Api.Satistics
+﻿namespace CarRenting.Services.Statistics
 {
-    public class StatisticsResponseModel
+    public class StatisticsServiceModel
     {
         public int TotalCars { get; set; }
 

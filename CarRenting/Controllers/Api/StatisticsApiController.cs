@@ -1,5 +1,5 @@
 ﻿using CarRenting.Data;
-using CarRenting.Models.Api.Satistics;
+using CarRenting.Services.Statistics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRenting.Controllers.Api
@@ -8,27 +8,17 @@ namespace CarRenting.Controllers.Api
     [Route("api/statistics")]
     public class StatisticsApiController : ControllerBase
     {
-        private readonly CarRentingDbContext data;
+        private readonly IStatisticsService statistics;
 
-        public StatisticsApiController(CarRentingDbContext _data)
+        public StatisticsApiController(IStatisticsService _statistics)
         {
-            data = _data;
+            statistics = _statistics;
         }
 
         [HttpGet]
-        public StatisticsResponseModel GetStatistics()
+        public StatisticsServiceModel GetStatistics()
         {
-            var totalCars = data.Cars.Count();
-            var totalUsers = data.Users.Count();
-
-            var statistics = new StatisticsResponseModel
-            {
-                TotalCars = totalCars,
-                TotalUsers = totalUsers,
-                TotalRents = 0
-            };
-
-            return statistics;
+           return statistics.Total();
         }
     }
 }

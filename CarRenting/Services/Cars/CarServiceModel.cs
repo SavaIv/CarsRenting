@@ -1,6 +1,6 @@
-﻿namespace CarRenting.Models.Api.Cars
+﻿namespace CarRenting.Services.Cars
 {
-    public class CarResponseModel
+    public class CarServiceModel
     {
         public int Id { get; set; }
 

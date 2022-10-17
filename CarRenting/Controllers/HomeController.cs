@@ -1,6 +1,7 @@
 ﻿using CarRenting.Data;
 using CarRenting.Models;
 using CarRenting.Models.Home;
+using CarRenting.Services.Statistics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -8,18 +9,19 @@ namespace CarRenting.Controllers
 {
     public class HomeController : Controller
     {        
+        private readonly IStatisticsService statistics;
         private readonly CarRentingDbContext data;
 
-        public HomeController(CarRentingDbContext data)
+        public HomeController(
+            IStatisticsService _statistics,
+            CarRentingDbContext _data)
         {
-            this.data = data;
+            statistics = _statistics;
+            data = _data;
         }
 
         public IActionResult Index()
-        {
-            var totalCars = data.Cars.Count();
-            var totalUsers = data.Users.Count();
-
+        {            
             var cars = this.data
                 .Cars
                 .OrderByDescending(c => c.Id)
@@ -34,10 +36,12 @@ namespace CarRenting.Controllers
                 .Take(3)
                 .ToList();
 
+            var totalStatistics = statistics.Total();
+
             return View(new IndexViewModel
             {
-                TotalCars = totalCars,
-                TotalUsers = totalUsers,
+                TotalCars = totalStatistics.TotalCars,
+                TotalUsers = totalStatistics.TotalUsers,
                 Cars = cars
             });
         }
