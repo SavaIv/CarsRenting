@@ -2,6 +2,12 @@
 {
     public class DataConstants
     {
+        public class User
+        {
+            public const int FullNameMinLength = 5;
+            public const int FullNameMaxLength = 40;
+        }
+
         public class Car
         {
             public const int CarBrandMaxLength = 20;
