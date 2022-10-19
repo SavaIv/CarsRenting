@@ -26,7 +26,7 @@ namespace CarRenting.Controllers
         [HttpPost]
         public IActionResult Become(BecomeDealerFormModel dealer)
         {
-            var userId = User.GetId();
+            var userId = User.Id();
 
             var userIdAlreadyDealer = data
                 .Dealers

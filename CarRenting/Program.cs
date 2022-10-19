@@ -1,6 +1,7 @@
 using CarRenting.Data;
 using CarRenting.Infrastructure;
 using CarRenting.Services.Cars;
+using CarRenting.Services.Dealers;
 using CarRenting.Services.Statistics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<ICarService, CarService>();
+builder.Services.AddTransient<IDealerService, DealerService>();
 
 var app = builder.Build();
 
