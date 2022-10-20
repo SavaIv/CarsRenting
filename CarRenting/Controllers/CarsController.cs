@@ -105,14 +105,14 @@ namespace CarRenting.Controllers
         {
             var userId = User.Id();
 
-            if (!dealers.IsDealer(userId))
+            if (!dealers.IsDealer(userId) && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(DealersController.Become), "Dealers");
             }
 
             var car = cars.Details(Id);
 
-            if (car.UserId != userId)
+            if (car.UserId != userId && !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -135,7 +135,7 @@ namespace CarRenting.Controllers
         {
             var dealerId = dealers.IdByUser(User.Id());
 
-            if (dealerId == 0)
+            if (dealerId == 0 || !User.IsAdmin())
             {
                 return RedirectToAction(nameof(DealersController.Become), "Dealers");
             }
@@ -152,7 +152,7 @@ namespace CarRenting.Controllers
                 return View(car);
             }
 
-            if (!cars.IsByDealer(Id, dealerId))
+            if (!cars.IsByDealer(Id, dealerId) && !User.IsAdmin())
             {
                 return BadRequest();
             }
