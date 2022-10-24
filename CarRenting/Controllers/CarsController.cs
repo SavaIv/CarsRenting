@@ -135,7 +135,7 @@ namespace CarRenting.Controllers
         {
             var dealerId = dealers.IdByUser(User.Id());
 
-            if (dealerId == 0 || !User.IsAdmin())
+            if (dealerId == 0 && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(DealersController.Become), "Dealers");
             }

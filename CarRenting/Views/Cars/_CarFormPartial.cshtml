@@ -34,15 +34,13 @@
                 <div class="mb-3">
                     <label asp-for="CategoryId" class="form-label"></label>
                     <select asp-for="CategoryId" class="form-select" aria-label="Default select example">
-                        <option selected>Open this select menu</option>
+                        @*<option selected>Open this select menu</option>*@
                         @foreach (var category in Model.Categories)
                         {
                             <option value=@category.Id>@category.Name</option>
                         }
                     </select>
                 </div>
-
-
 
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
