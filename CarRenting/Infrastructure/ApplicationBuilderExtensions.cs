@@ -3,7 +3,7 @@ using CarRenting.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-using static CarRenting.WebConstants;
+using static CarRenting.Areas.Admin.AdminConstants;
 
 
 namespace CarRenting.Infrastructure
