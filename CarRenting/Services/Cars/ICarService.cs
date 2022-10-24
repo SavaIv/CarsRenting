@@ -1,4 +1,5 @@
 ﻿using CarRenting.Models;
+using CarRenting.Services.Cars.Models;
 
 namespace CarRenting.Services.Cars
 {

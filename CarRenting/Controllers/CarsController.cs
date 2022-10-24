@@ -9,6 +9,7 @@ using System.Security.Claims;
 using CarRenting.Models;
 using CarRenting.Services.Cars;
 using CarRenting.Services.Dealers;
+using AutoMapper;
 
 namespace CarRenting.Controllers
 {
@@ -16,13 +17,16 @@ namespace CarRenting.Controllers
     {
         private readonly ICarService cars;
         private readonly IDealerService dealers;
+        private readonly IMapper mapper;
         
         public CarsController(
             ICarService _cars,
-            IDealerService _dealers)
+            IDealerService _dealers,
+            IMapper _mapper)
         {
             cars = _cars;
             dealers = _dealers;
+            mapper = _mapper;
         }
 
         public IActionResult All([FromQuery] AllCarsQueryModel query)
@@ -117,16 +121,10 @@ namespace CarRenting.Controllers
                 return Unauthorized();
             }
 
-            return View(new CarFormModel
-            {
-                Brand = car.Brand,
-                Model = car.Model,
-                Description = car.Description,
-                ImageUrl = car.ImageUrl,
-                Year = car.Year,
-                CategoryId = car.CategoryId,
-                Categories = cars.AllCategories()
-            });
+            var carForm = mapper.Map<CarFormModel>(car);
+            carForm.Categories = cars.AllCategories();
+
+            return View(carForm);
         }
 
         [Authorize]

@@ -1,4 +1,6 @@
-﻿using CarRenting.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using CarRenting.Data;
 using CarRenting.Models;
 using CarRenting.Models.Home;
 using CarRenting.Services.Statistics;
@@ -11,13 +13,16 @@ namespace CarRenting.Controllers
     {        
         private readonly IStatisticsService statistics;
         private readonly CarRentingDbContext data;
+        private readonly IMapper mapper;
 
         public HomeController(
             IStatisticsService _statistics,
-            CarRentingDbContext _data)
+            CarRentingDbContext _data,
+            IMapper _mapper)
         {
             statistics = _statistics;
             data = _data;
+            mapper = _mapper;
         }
 
         public IActionResult Index()
@@ -25,14 +30,7 @@ namespace CarRenting.Controllers
             var cars = this.data
                 .Cars
                 .OrderByDescending(c => c.Id)
-                .Select(c => new CarIndexViewModel
-                {
-                    Id = c.Id,
-                    Brand = c.Brand,
-                    Model = c.Model,
-                    Year = c.Year,
-                    ImageUrl = c.ImageUrl
-                })
+                .ProjectTo<CarIndexViewModel>(mapper.ConfigurationProvider)
                 .Take(3)
                 .ToList();
 
