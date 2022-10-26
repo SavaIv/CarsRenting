@@ -12,6 +12,8 @@ namespace CarRenting.Services.Cars
             int currentPage,
             int carsPerPage);
 
+        //Latest();
+
         CarDetailsServiceModel Details(int carId);
 
         int Create(
