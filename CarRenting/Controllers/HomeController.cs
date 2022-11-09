@@ -3,36 +3,46 @@ using AutoMapper.QueryableExtensions;
 using CarRenting.Data;
 using CarRenting.Models;
 using CarRenting.Models.Home;
+using CarRenting.Services.Cars;
+using CarRenting.Services.Cars.Models;
 using CarRenting.Services.Statistics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 
 namespace CarRenting.Controllers
 {
     public class HomeController : Controller
-    {        
+    {
         private readonly IStatisticsService statistics;
-        private readonly CarRentingDbContext data;
-        private readonly IMapper mapper;
+        private readonly ICarService cars;
+        private readonly IMemoryCache cache;
 
         public HomeController(
             IStatisticsService _statistics,
-            CarRentingDbContext _data,
-            IMapper _mapper)
+            ICarService _cars,
+            IMemoryCache _cache)
         {
             statistics = _statistics;
-            data = _data;
-            mapper = _mapper;
+            cars = _cars;
+            cache = _cache;
         }
 
         public IActionResult Index()
-        {            
-            var cars = this.data
-                .Cars
-                .OrderByDescending(c => c.Id)
-                .ProjectTo<CarIndexViewModel>(mapper.ConfigurationProvider)
-                .Take(3)
-                .ToList();
+        {
+            const string latestCarsCacheKey = "LatestCarsCacheKey";
+            var latestCars = cache.Get<List<LatestCarServiceModel>>(latestCarsCacheKey);
+
+            if (latestCars == null)
+            {
+                latestCars = cars.Latest().ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15))
+                    .SetPriority(CacheItemPriority.High);
+
+                cache.Set(latestCarsCacheKey, latestCars, cacheOptions);
+            }
 
             var totalStatistics = statistics.Total();
 
@@ -40,7 +50,7 @@ namespace CarRenting.Controllers
             {
                 TotalCars = totalStatistics.TotalCars,
                 TotalUsers = totalStatistics.TotalUsers,
-                Cars = cars
+                Cars = latestCars
             });
         }
 

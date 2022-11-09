@@ -1,4 +1,6 @@
-﻿namespace CarRenting.Models.Home
+﻿using CarRenting.Services.Cars.Models;
+
+namespace CarRenting.Models.Home
 {
     public class IndexViewModel
     {
@@ -8,6 +10,6 @@
 
         public int TotalRents { get; set; }
 
-        public List<CarIndexViewModel> Cars { get; set; }
+        public List<LatestCarServiceModel> Cars { get; set; }
     }
 }

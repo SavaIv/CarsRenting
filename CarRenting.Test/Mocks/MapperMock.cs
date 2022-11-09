@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarRenting.Infrastructure;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace CarRenting.Test.Mocks
         {
             get 
             {
-                var mapperMock = new Mock<IMapper>();
+                //var mapperMock = new Mock<IMapper>();
 
-                mapperMock
-                    .SetupGet(m => m.ConfigurationProvider)
-                    .Returns(Mock.Of<IConfigurationProvider>());
+                //mapperMock
+                //    .SetupGet(m => m.ConfigurationProvider)
+                //    .Returns(Mock.Of<IConfigurationProvider>());
 
-                return mapperMock.Object;
+                //return mapperMock.Object;
+
+                var mapperConfiguration = new MapperConfiguration(config =>
+                {
+                    config.AddProfile<MappingProfile>();
+                });
+
+                return new Mapper(mapperConfiguration);
             }
         }
     }

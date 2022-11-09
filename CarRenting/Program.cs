@@ -30,6 +30,8 @@ builder.Services.AddDefaultIdentity<User>(options =>
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();

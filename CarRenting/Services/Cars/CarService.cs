@@ -164,5 +164,15 @@ namespace CarRenting.Services.Cars
                 })
                 .ToList();
         }
+
+        public IEnumerable<LatestCarServiceModel> Latest()
+        {
+            return data
+                .Cars
+                .OrderByDescending(c => c.Id)
+                .ProjectTo<LatestCarServiceModel>(mapper.ConfigurationProvider)
+                .Take(3)
+                .ToList();
+        }
     }
 }

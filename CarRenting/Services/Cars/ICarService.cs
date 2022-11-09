@@ -12,7 +12,7 @@ namespace CarRenting.Services.Cars
             int currentPage,
             int carsPerPage);
 
-        //Latest();
+        IEnumerable<LatestCarServiceModel> Latest();
 
         CarDetailsServiceModel Details(int carId);
 
