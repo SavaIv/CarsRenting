@@ -4,6 +4,7 @@ using CarRenting.Models.Cars;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static CarRenting.Infrastructure.ClaimsPrincipalExtensions;
+using static CarRenting.WebConstants;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Claims;
 using CarRenting.Models;
@@ -92,6 +93,8 @@ namespace CarRenting.Controllers
                 car.Year,
                 car.CategoryId,
                 dealerId);
+
+            TempData[GlobalMessageKey] = "Your car was saved successfuly";
 
             return RedirectToAction(nameof(All));
         }
