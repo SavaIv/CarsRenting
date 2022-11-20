@@ -107,6 +107,13 @@ namespace CarRenting.Controllers
             return View(myCars);
         }
 
+        public IActionResult Details(int Id)
+        {
+            var car = this.cars.Details(Id);            
+
+            return View(car);
+        }
+
         [Authorize]
         public IActionResult Edit(int Id)
         {
