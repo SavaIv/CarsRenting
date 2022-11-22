@@ -1,6 +1,6 @@
-﻿namespace CarRenting.Models.Cars
+﻿namespace CarRenting.Services.Cars.Models
 {
-    public class CarCategoryViewModel
+    public class CarCategoryServiceModel
     {
         public int Id { get; set; }
 

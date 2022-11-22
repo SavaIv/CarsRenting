@@ -1,63 +1,11 @@
-﻿@model AddCarFormModel
+﻿@model CarFormModel
 
 @{
-    ViewData["Title"] = "Add car";
+    ViewBag.Title = "Add Car";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="offset-md-2 col-md-8 col-sm-12 col-xl-6">
-            <h2 class="heading-margin text-center">Add Car</h2>
+<partial name="_CarFormPartial" model="@Model" />
 
-            <form method="post">
-                <div class="mb-3">
-                    <label asp-for="Brand" class="form-label"></label>
-                    <input asp-for="Brand" class="form-control" placeholder="Place brand name here">
-                    <span asp-validation-for="Brand" class="small text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Model" class="form-label"></label>
-                    <input asp-for="Model" class="form-control" placeholder="Place modeld name here">
-                    <span asp-validation-for="Model" class="small text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label"></label>
-                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Place the description here"></textarea>
-                    <span asp-validation-for="Description" class="small text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ImageUrl" class="form-label"></label>
-                    <input asp-for="ImageUrl" class="form-control" placeholder="Place image url here">
-                    <span asp-validation-for="ImageUrl" class="small text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Year" class="form-label"></label>
-                    <input asp-for="Year" class="form-control" placeholder="@DateTime.UtcNow.Year">
-                    <span asp-validation-for="Year" class="small text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="CategoryId" class="form-label"></label>
-                    <select asp-for="CategoryId" class="form-select" aria-label="Default select example">
-                        <option selected>Open this select menu</option>
-                        @foreach (var category in Model.Categories)
-                        {
-                            <option value=@category.Id>@category.Name</option>
-                        }
-                    </select>
-                </div>
-
-
-
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-                @*<input class="btn btn-primary" type="submit" value="Save"/>*@
-            </form>
-
-
-
-        </div>
-    </div>
-</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,5 +1,9 @@
 using CarRenting.Data;
+using CarRenting.Data.Models;
 using CarRenting.Infrastructure;
+using CarRenting.Services.Cars;
+using CarRenting.Services.Dealers;
+using CarRenting.Services.Statistics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +17,7 @@ builder.Services.AddDbContext<CarRentingDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
+builder.Services.AddDefaultIdentity<User>(options => 
     {
         options.SignIn.RequireConfirmedAccount = false; 
         options.Password.RequireDigit = false; 
@@ -21,9 +25,18 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         options.Password.RequireNonAlphanumeric = false; 
         options.Password.RequireUppercase = false; 
     })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<CarRentingDbContext>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
+builder.Services.AddTransient<ICarService, CarService>();
+builder.Services.AddTransient<IDealerService, DealerService>();
 
 var app = builder.Build();
 
@@ -52,6 +65,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "Areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

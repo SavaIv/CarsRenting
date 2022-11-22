@@ -1,19 +1,22 @@
 ﻿using CarRenting.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRenting.Data
 {
-    public class CarRentingDbContext : IdentityDbContext
+    public class CarRentingDbContext : IdentityDbContext<User>
     {
         public CarRentingDbContext(DbContextOptions<CarRentingDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Car> Cars { get; init; }
+        public DbSet<Car> Cars { get; set; }
 
-        public DbSet<Category> Categories { get; init; }
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Dealer> Dealers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,8 +27,21 @@ namespace CarRenting.Data
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+                .Entity<Car>()
+                .HasOne(c => c.Dealer)
+                .WithMany(d => d.Cars)
+                .HasForeignKey(c => c.DealerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Dealer>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<Dealer>(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
-
     }
 }

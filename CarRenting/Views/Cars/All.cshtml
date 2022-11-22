@@ -73,20 +73,10 @@
     </div>
 </div>
 
-<div class="row">
-    @foreach (var car in Model.Cars)
-    {
-        <div class="col-md-3">
-            <div class="card mb-3">
-                <img class="card-img-top" src="@car.ImageUrl" alt="@car.Brand @car.Model - @car.Year (@car.Category)">
-                <div class="card-body">
-                    <h5 class="card-title text-center">@car.Brand @car.Model (@car.Year)</h5>
-                    <p class="card-text text-center">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-primary">View More</a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+@if (!Model.Cars.Any())
+{
+    <h2 class="text-center">No cars for the given criteria!</h2>
+}
 
+<partial name="_CarsPartial" model="@Model.Cars" />
 
